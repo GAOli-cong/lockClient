@@ -1,0 +1,115 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("CTT"))
+}
+android {
+    namespace 'com.glc.lockclient'
+    compileSdk 34
+
+    signingConfigs {
+        config {
+            storeFile file("../app.jks")
+            storePassword "111111"
+            keyAlias "key0"
+            keyPassword "111111"
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.glc.lockclient"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            android.applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    // apk_版本号-版本名称-编译时间.apk
+                    outputFileName = "lockClient_${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime()}.apk"
+                }
+            }
+        }
+
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            android.applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    // apk_版本号-版本名称-编译时间.apk
+                    outputFileName = "lockClient_${defaultConfig.versionCode}-${defaultConfig.versionName}-${releaseTime()}.apk"
+                }
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures{
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    //rabbitmq
+    implementation ("com.rabbitmq:amqp-client:5.7.0")
+    implementation ("com.google.guava:guava:30.1.1-android")
+
+    //utilCode
+    implementation 'com.blankj:utilcodex:1.31.1'
+    //greendao
+    implementation 'org.greenrobot:greendao:3.3.0'
+    // eventbus
+    implementation 'org.greenrobot:eventbus:3.0.0'
+
+    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:3.0.2"
+
+    // 基础依赖包，必须要依赖
+    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+
+    //baaner
+    implementation 'io.github.youth5201314:banner:2.2.3'
+
+    //图加载
+    implementation "com.github.bumptech.glide:glide:4.12.0"
+
+        implementation project(':slideToggleView')
+    //刷新
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation  'io.github.scwang90:refresh-layout-kernel:3.0.0-alpha'      //核心必须依赖
+    implementation  'io.github.scwang90:refresh-header-classics:3.0.0-alpha'    //经典刷新头
+
+
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0' // 添加 RxJava 适配器
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+
+
+    implementation 'com.airbnb.android:lottie:6.6.0'
+}

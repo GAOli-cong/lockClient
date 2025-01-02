@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked 状态 -->
+    <item android:state_checked="true" android:drawable="@drawable/ic_select_on" />
+    <!-- 默认状态 -->
+    <item android:drawable="@drawable/ic_select_un" />
+</selector>
