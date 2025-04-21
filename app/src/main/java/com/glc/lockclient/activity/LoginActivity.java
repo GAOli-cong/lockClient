@@ -73,43 +73,44 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
         requestUserBean.setPassword(password);
 
         if(TextUtils.equals("adminNoLogin",user)){
-            SPUtils.getInstance().put("username", user);
+            SPUtils.getInstance().put("username", "adminNoLogin");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
-            return;
+        }else {
+            RetrofitClient.getApiService().login(requestUserBean)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ApiResponseBean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ApiResponseBean apiResponseBean) {
+                            Log.d(TAG, "onNext: " + apiResponseBean);
+                            if (TextUtils.equals(apiResponseBean.getMsg(), "登录成功")) {
+                                SPUtils.getInstance().put("username", user);
+                                SPUtils.getInstance().put("password", password);
+
+                                SPUtils.getInstance().put("token", apiResponseBean.getData().toString());
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            ToastUtils.showLong("请确定已连接，lock_server网络。"+e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
         }
 
-        RetrofitClient.getApiService().login(requestUserBean)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ApiResponseBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ApiResponseBean apiResponseBean) {
-                        Log.d(TAG, "onNext: " + apiResponseBean);
-                        if (TextUtils.equals(apiResponseBean.getMsg(), "登录成功")) {
-                            SPUtils.getInstance().put("username", user);
-                            SPUtils.getInstance().put("password", password);
-
-                            SPUtils.getInstance().put("token", apiResponseBean.getData().toString());
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtils.showLong("请确定已连接，lock_server网络。"+e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 }

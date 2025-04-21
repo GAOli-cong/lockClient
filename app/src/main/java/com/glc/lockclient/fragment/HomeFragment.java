@@ -76,6 +76,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
         binding.userName.setOnClickListener(view1 -> {
           if(TextUtils.equals("adminNoLogin",SPUtils.getInstance().getString("username"))){
               send();
+              ToastUtils.showLong("已点击开锁");
           }
         });
 
